@@ -84,8 +84,8 @@ int main() {
 
         // camera
         glm::mat4 view = glm::mat4(1.0f);
-        glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 10.0f);
-        glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, -1.0f);
+        glm::vec3 cameraPos = glm::vec3(1.0f, 0.5f, 2.0f);
+        glm::vec3 cameraTarget = glm::vec3(0.0f, -.03f, -1.0f);
         glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 
         glm::vec3 cameraDirection = glm::normalize(cameraTarget - cameraPos);
