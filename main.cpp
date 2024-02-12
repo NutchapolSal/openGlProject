@@ -36,6 +36,24 @@ void CreateTriangle() {
             0.0f, -1.0f, 1.0f,
             1.0f, -1.0f, 0.0f,
             0.0f, 1.0f, 0.0f};
+    GLfloat vertices2[] =
+        {
+            2.0f + -1.0f, -1.0f, 0.0f,
+            2.0f + 0.0f, -1.0f, 1.0f,
+            2.0f + 1.0f, -1.0f, 0.0f,
+            2.0f + 0.0f, 1.0f, 0.0f};
+    GLfloat vertices3[] =
+        {
+            -1.0f, 1.5f + -1.0f, 0.8f + 0.0f,
+            0.0f, 1.5f + -1.0f, 0.8f + 1.0f,
+            1.0f, 1.5f + -1.0f, 0.8f + 0.0f,
+            0.0f, 1.5f + 1.0f, 0.8f + 0.0f};
+    GLfloat vertices4[] =
+        {
+            3.0f + -1.0f, -1.0f, 0.0f,
+            3.0f + 0.0f, -2.0f, 1.0f,
+            3.0f + 1.0f, -0.5f, 0.7f,
+            3.0f + 0.0f, 1.0f, 0.9f};
 
     unsigned int indices[] =
         {
@@ -47,6 +65,15 @@ void CreateTriangle() {
     Mesh *obj1 = new Mesh();
     obj1->CreateMesh(vertices, indices, 12, 12);
     meshList.push_back(obj1);
+    Mesh *obj2 = new Mesh();
+    obj2->CreateMesh(vertices2, indices, 12, 12);
+    meshList.push_back(obj2);
+    Mesh *obj3 = new Mesh();
+    obj3->CreateMesh(vertices3, indices, 12, 12);
+    meshList.push_back(obj3);
+    Mesh *obj4 = new Mesh();
+    obj4->CreateMesh(vertices4, indices, 12, 12);
+    meshList.push_back(obj4);
 }
 
 void CreateShaders() {
@@ -64,8 +91,6 @@ int main() {
 
     // for secret room 3 enter - https://forms.gle/U9VE4pkYAPNvUW1H9
 
-    GLuint uniformModel = 0, uniformProjection = 0;
-
     glm::mat4 projection = glm::perspective(
         45.0f,
         (GLfloat)mainWindow.getBufferWidth() / (GLfloat)mainWindow.getBufferHeight(),
@@ -80,20 +105,21 @@ int main() {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // draw here
-        shaderList[0].UseShader();
-        uniformModel = shaderList[0].GetUniformLocation("model");
-        uniformProjection = shaderList[0].GetUniformLocation("projection");
+        for (int i = 0; i < 4; i++) {
+            GLuint uniformModel = 0, uniformProjection = 0;
 
-        // Object
-        glm::mat4 model(1.0f);
+            shaderList[i].UseShader();
+            uniformModel = shaderList[i].GetUniformLocation("model");
+            uniformProjection = shaderList[i].GetUniformLocation("projection");
 
-        model = glm::translate(model, glm::vec3(0.3f, 1.0f, -2.5f));
-        // model = glm::rotate(model, 90.0f * 3.1415f / 180.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-        model = glm::scale(model, glm::vec3(2.0f, 2.0f, 1.0f));
-        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-        glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
-        meshList[0]->RenderMesh();
+            glm::mat4 model(1.0f);
+            model = glm::translate(model, glm::vec3(0.3f, 0.0f, -2.5f));
+            model = glm::rotate(model, 90.0f * 3.1415f / 180.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+            glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+            glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+            meshList[i]->RenderMesh();
+        }
 
         glUseProgram(0);
         // end draw
