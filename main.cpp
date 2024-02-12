@@ -87,9 +87,9 @@ int main() {
         // Object
         glm::mat4 model(1.0f);
 
-        model = glm::translate(model, glm::vec3(0.3f, 0.0f, -2.5f));
+        model = glm::translate(model, glm::vec3(0.3f, 1.0f, -2.5f));
         model = glm::rotate(model, 90.0f * 3.1415f / 180.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-        model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+        model = glm::scale(model, glm::vec3(2.0f, 2.0f, 1.0f));
         glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
         meshList[0]->RenderMesh();
