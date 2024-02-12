@@ -33,18 +33,19 @@ void CreateTriangle() {
     GLfloat vertices[] =
         {
             -1.0f, -1.0f, 0.0f,
+            0.0f, -1.0f, 1.0f,
             1.0f, -1.0f, 0.0f,
             0.0f, 1.0f, 0.0f};
 
     unsigned int indices[] =
         {
-            0,
-            1,
-            2,
-        };
+            0, 3, 1,
+            1, 3, 2,
+            2, 3, 0,
+            0, 1, 2};
 
     Mesh *obj1 = new Mesh();
-    obj1->CreateMesh(vertices, indices, 9, 9);
+    obj1->CreateMesh(vertices, indices, 12, 12);
     meshList.push_back(obj1);
 }
 
@@ -88,7 +89,7 @@ int main() {
         glm::mat4 model(1.0f);
 
         model = glm::translate(model, glm::vec3(0.3f, 0.0f, -2.5f));
-        model = glm::rotate(model, 90.0f * 3.1415f / 180.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+        // model = glm::rotate(model, 90.0f * 3.1415f / 180.0f, glm::vec3(0.0f, 0.0f, 1.0f));
         model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
         glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
