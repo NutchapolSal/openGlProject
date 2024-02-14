@@ -23,6 +23,9 @@ Window mainWindow;
 std::vector<Mesh *> meshList;
 std::vector<Shader> shaderList;
 
+float yaw = -90.0f;
+float pitch = 0.0f;
+
 // Vertex Shader
 static const char *vShader = "Shaders/shader.vert";
 
@@ -57,6 +60,27 @@ void CreateShaders() {
     shaderList.push_back(*shader1);
 }
 
+void checkMouse() {
+    double xpos;
+    double ypos;
+    glfwGetCursorPos(mainWindow.getWindow(), &xpos, &ypos);
+
+    static float lastX = xpos;
+    static float lastY = ypos;
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos;
+    lastX = xpos;
+    lastY = ypos;
+
+    float sensitivity = 0.1f;
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    yaw += xoffset;
+    pitch += yoffset;
+}
+
 int main() {
     mainWindow = Window(WIDTH, HEIGHT, 3, 3);
     mainWindow.initialise();
@@ -84,10 +108,40 @@ int main() {
         (GLfloat)mainWindow.getBufferWidth() / (GLfloat)mainWindow.getBufferHeight(),
         0.1f,
         100.0f);
+
+    float deltaTime;
+    float lastFrame;
     // Loop until window closed
     while (!mainWindow.getShouldClose()) {
+        float currentFrame = static_cast<float>(glfwGetTime());
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
         // Get + Handle user input events
         glfwPollEvents();
+
+        checkMouse();
+
+        glm::vec3 direction;
+        direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+        direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+        direction.y = sin(glm::radians(pitch));
+
+        if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
+            cameraPos += cameraDirection * deltaTime * 5.0f;
+        }
+        if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
+            cameraPos -= cameraDirection * deltaTime * 5.0f;
+        }
+        if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
+            cameraPos -= cameraRight * deltaTime * 5.0f;
+        }
+        if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
+            cameraPos += cameraRight * deltaTime * 5.0f;
+        }
+
+        cameraDirection = glm::normalize(direction);
+        cameraRight = glm::normalize(glm::cross(cameraDirection, up));
+        cameraUp = glm::normalize(glm::cross(cameraRight, cameraDirection));
 
         // Clear window
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
