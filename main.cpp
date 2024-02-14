@@ -66,7 +66,18 @@ int main() {
 
     // for secret room 3 enter - https://forms.gle/U9VE4pkYAPNvUW1H9
 
-    GLuint uniformModel = 0, uniformProjection = 0, uniformView = 0;
+    GLuint uniformModel = 0;
+    GLuint uniformProjection = 0;
+    GLuint uniformView = 0;
+
+    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 10.0f);
+    glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, -1.0f);
+    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+
+    glm::vec3 cameraDirection = glm::normalize(cameraTarget - cameraPos);
+
+    glm::vec3 cameraRight = glm::normalize(glm::cross(cameraDirection, up));
+    glm::vec3 cameraUp = glm::cross(cameraRight, cameraDirection);
 
     glm::mat4 projection = glm::perspective(
         45.0f,
@@ -84,14 +95,6 @@ int main() {
 
         // camera
         glm::mat4 view = glm::mat4(1.0f);
-        glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 10.0f);
-        glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, -1.0f);
-        glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-
-        glm::vec3 cameraDirection = glm::normalize(cameraTarget - cameraPos);
-
-        glm::vec3 cameraRight = glm::normalize(glm::cross(cameraDirection, up));
-        glm::vec3 cameraUp = glm::cross(cameraRight, cameraDirection);
 
         // draw here
         shaderList[0].UseShader();
