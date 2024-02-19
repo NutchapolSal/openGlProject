@@ -125,7 +125,7 @@ int main() {
     int width;
     int height;
     int nrChannels;
-    unsigned char *data = stbi_load("Textures/cloth.jpg", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load("Textures/container.jpg", &width, &height, &nrChannels, 0);
 
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -208,7 +208,7 @@ int main() {
 
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, texture);
-            meshList[0]->RenderMesh();
+            meshList[i]->RenderMesh();
         }
 
         glUseProgram(0);
