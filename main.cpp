@@ -33,26 +33,16 @@ static const char *vShader = "Shaders/shader.vert";
 // Fragment Shader
 static const char *fShader = "Shaders/shader.frag";
 
-void CreateTriangle() {
-    GLfloat vertices[] =
-        {
-            // posx, posy, posz, texx, texy
-            -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-            0.0f, -1.0f, 1.0f, 0.5f, 0.0f,
-            1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, 1.0f, 0.0f, 0.5f, 1.0f};
-
-    unsigned int indices[] =
-        {
-            0, 3, 1,
-            1, 3, 2,
-            2, 3, 0,
-            0, 1, 2};
-
+void CreateOBJ() {
     Mesh *obj1 = new Mesh();
-    obj1->CreateMesh(vertices, indices, 20, 12);
-    for (int i = 0; i < 10; i++) {
-        meshList.push_back(obj1);
+    bool loaded = obj1->CreateMeshFromOBJ("Models/suzanne.obj");
+
+    if (loaded) {
+        for (int i = 0; i < 10; i++) {
+            meshList.push_back(obj1);
+        }
+    } else {
+        std::cout << "Failed to load model" << std::endl;
     }
 }
 
@@ -89,7 +79,7 @@ int main() {
     mainWindow = Window(WIDTH, HEIGHT, 3, 3);
     mainWindow.initialise();
 
-    CreateTriangle();
+    CreateOBJ();
     CreateShaders();
 
     // for secret room 3 enter - https://forms.gle/U9VE4pkYAPNvUW1H9
@@ -125,10 +115,10 @@ int main() {
     int width;
     int height;
     int nrChannels;
-    unsigned char *data = stbi_load("Textures/container.jpg", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load("Textures/uvmap.png", &width, &height, &nrChannels, 0);
 
     if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     } else {
         std::cout << "Failed to load texture" << std::endl;
