@@ -27,7 +27,7 @@ std::vector<Shader *> shaderList;
 float yaw = -90.0f;
 float pitch = 0.0f;
 glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
-glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, -2.0f);
+glm::vec3 lightPos = glm::vec3(1.0f, 1.0f, 0.0f);
 
 static const char *vShader = "Shaders/shader.vert";
 static const char *fShader = "Shaders/shader.frag";
@@ -213,6 +213,7 @@ int main() {
 
         glm::mat4 model(1.0f);
         model = glm::translate(model, lightPos);
+        model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
         glUniform3fv(shaderList[1]->GetUniformLocation("lightColor"), 1, (GLfloat *)&lightColor);
         glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(view));
