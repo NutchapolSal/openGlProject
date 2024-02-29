@@ -9,6 +9,7 @@ in vec3 FragPos;
 uniform sampler2D texture2D;
 uniform vec3 lightColor;
 uniform vec3 lightPos;
+uniform vec3 viewPos;
 
 vec3 ambientLight() {
     float ambientStrength = 0.2f;
@@ -26,7 +27,23 @@ vec3 diffuseLight() {
     return diffuse;
 }
 
+vec3 specularLight() {
+    float specularStrength = 0.8f;
+    float shininess = 64.0f;
+
+    vec3 lightDir = normalize(lightPos - FragPos);
+    vec3 norm = normalize(Normal);
+    vec3 reflectDir = reflect(-lightDir, norm);
+    vec3 viewDir = normalize(viewPos - FragPos);
+
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0f), shininess);
+
+    vec3 specular = specularStrength * spec * lightColor;
+
+    return specular;
+}
+
 void main()
 {
-    colour = texture(texture2D, TexCoord) * vec4(ambientLight() + diffuseLight(), 1.0f);
+    colour = texture(texture2D, TexCoord) * vec4(ambientLight() + diffuseLight() + specularLight(), 1.0f);
 }
