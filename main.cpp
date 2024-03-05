@@ -68,6 +68,10 @@ void checkMouse() {
     lastX = xpos;
     lastY = ypos;
 
+    if (!glfwGetWindowAttrib(mainWindow.getWindow(), GLFW_FOCUSED)) {
+        return;
+    }
+
     float sensitivity = 0.1f;
     xoffset *= sensitivity;
     yoffset *= sensitivity;
@@ -94,6 +98,7 @@ int main() {
     glm::vec3 cameraDirection = glm::normalize(cameraTarget - cameraPos);
 
     glm::vec3 cameraRight = glm::normalize(glm::cross(cameraDirection, up));
+    glm::vec3 cameraForwardFlat = glm::normalize(glm::vec3(cameraDirection.x, 0.0f, cameraDirection.z));
     glm::vec3 cameraUp = glm::cross(cameraRight, cameraDirection);
 
     glm::mat4 projection = glm::perspective(
@@ -134,6 +139,23 @@ int main() {
         // Get + Handle user input events
         glfwPollEvents();
 
+        if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+            glfwSetWindowShouldClose(mainWindow.getWindow(), GL_TRUE);
+        }
+
+        if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_I) == GLFW_PRESS) {
+            pitch += 0.075f;
+        }
+        if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_K) == GLFW_PRESS) {
+            pitch -= 0.075f;
+        }
+        if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_J) == GLFW_PRESS) {
+            yaw -= 0.075f;
+        }
+        if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_L) == GLFW_PRESS) {
+            yaw += 0.075f;
+        }
+
         checkMouse();
 
         glm::vec3 direction;
@@ -141,11 +163,16 @@ int main() {
         direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
         direction.y = sin(glm::radians(pitch));
 
+        cameraDirection = glm::normalize(direction);
+        cameraRight = glm::normalize(glm::cross(cameraDirection, up));
+        cameraForwardFlat = glm::normalize(glm::vec3(cameraDirection.x, 0.0f, cameraDirection.z));
+        cameraUp = glm::normalize(glm::cross(cameraRight, cameraDirection));
+
         if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
-            cameraPos += cameraDirection * deltaTime * 5.0f;
+            cameraPos += cameraForwardFlat * deltaTime * 5.0f;
         }
         if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
-            cameraPos -= cameraDirection * deltaTime * 5.0f;
+            cameraPos -= cameraForwardFlat * deltaTime * 5.0f;
         }
         if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
             cameraPos -= cameraRight * deltaTime * 5.0f;
@@ -153,10 +180,17 @@ int main() {
         if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
             cameraPos += cameraRight * deltaTime * 5.0f;
         }
-
-        cameraDirection = glm::normalize(direction);
-        cameraRight = glm::normalize(glm::cross(cameraDirection, up));
-        cameraUp = glm::normalize(glm::cross(cameraRight, cameraDirection));
+        if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_SPACE) == GLFW_PRESS) {
+            cameraPos += up * deltaTime * 5.0f;
+        }
+        if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+            cameraPos -= up * deltaTime * 5.0f;
+        }
+        if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_R) == GLFW_PRESS) {
+            cameraPos = glm::vec3(0.0f, 0.0f, 10.0f);
+            yaw = -90.0f;
+            pitch = 0.0f;
+        }
 
         glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraDirection, cameraUp);
 
