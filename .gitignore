@@ -1,3 +1,5 @@
 main.exe
 glfw3.dll
 glew32.dll
+/build
+/CMakeFiles
