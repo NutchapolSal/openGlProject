@@ -16,6 +16,7 @@ set(MY_SOURCE_FILES
     Libs/Shader.cpp
     Libs/Window.cpp
     Libs/stb_image.cpp
+    Libs/GameObject.cpp
 )
 
 add_executable(MyOpenGLProject
