@@ -3,3 +3,4 @@ glfw3.dll
 glew32.dll
 /build
 /CMakeFiles
+*.blend[0-9]

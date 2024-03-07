@@ -27,7 +27,7 @@ std::vector<Shader *> shaderList;
 float yaw = -90.0f;
 float pitch = 0.0f;
 glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
-glm::vec3 lightPos = glm::vec3(1.0f, 1.0f, 0.0f);
+glm::vec3 lightPos = glm::vec3(4.0f, 4.0f, 1.0f);
 
 void CreateOBJ() {
     Mesh *obj1 = new Mesh();
@@ -37,6 +37,10 @@ void CreateOBJ() {
     Mesh *obj2 = new Mesh();
     obj2->CreateMeshFromOBJ("Models/cube.obj");
     meshList.push_back(obj2);
+
+    Mesh *obj3 = new Mesh();
+    obj3->CreateMeshFromOBJ("Blends/axis test.obj");
+    meshList.push_back(obj3);
 }
 
 void CreateShaders() {
@@ -128,7 +132,7 @@ int main() {
         100.0f);
 
     unsigned int texture;
-    loadTexture("Textures/uvmap.png", &texture);
+    loadTexture("Blends/axis test color.png", &texture);
 
     float deltaTime;
     float lastFrame;
@@ -201,59 +205,30 @@ int main() {
 
         // draw here
         shaderList[0]->UseShader();
-        GLuint uniformModel = 0;
-        GLuint uniformProjection = 0;
-        GLuint uniformView = 0;
-        uniformModel = shaderList[0]->GetUniformLocation("model");
-        uniformView = shaderList[0]->GetUniformLocation("view");
-        uniformProjection = shaderList[0]->GetUniformLocation("projection");
 
-        glm::vec3 pyramidPositions[] =
-            {
-                glm::vec3(0.0f, 0.0f, -2.5f),
-                glm::vec3(2.0f, 5.0f, -15.0f),
-                glm::vec3(-1.5f, -2.2f, -2.5f),
-                glm::vec3(-3.8f, -2.0f, -12.3f),
-                glm::vec3(2.4f, -0.4f, -3.5f),
-                glm::vec3(-1.7f, 3.0f, -7.5f),
-                glm::vec3(1.3f, -2.0f, -2.5f),
-                glm::vec3(1.5f, 2.0f, -2.5f),
-                glm::vec3(1.5f, 0.2f, -1.5f),
-                glm::vec3(-1.3f, 1.0f, -1.5f)};
+        glm::mat4 model(1.0f);
 
         glUniform3fv(shaderList[0]->GetUniformLocation("lightColor"), 1, (GLfloat *)&lightColor);
         glUniform3fv(shaderList[0]->GetUniformLocation("lightPos"), 1, (GLfloat *)&lightPos);
         glUniform3fv(shaderList[0]->GetUniformLocation("viewPos"), 1, (GLfloat *)&cameraPos);
+        glUniformMatrix4fv(shaderList[0]->GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(shaderList[0]->GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(shaderList[0]->GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
-        // Object
-        for (int i = 0; i < 10; i++) {
-            glm::mat4 model(1.0f);
-
-            model = glm::translate(model, pyramidPositions[i]);
-            model = glm::rotate(model, glm::radians(2.0f * i), glm::vec3(1.0f, 0.3f, 0.5f));
-            model = glm::scale(model, glm::vec3(0.8f, 0.8f, 1.0f));
-
-            glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-            glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(view));
-            glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
-
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, texture);
-            meshList[0]->RenderMesh();
-        }
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        meshList[2]->RenderMesh();
 
         shaderList[1]->UseShader();
-        uniformModel = shaderList[1]->GetUniformLocation("model");
-        uniformView = shaderList[1]->GetUniformLocation("view");
-        uniformProjection = shaderList[1]->GetUniformLocation("projection");
 
-        glm::mat4 model(1.0f);
+        model = glm::mat4(1.0f);
         model = glm::translate(model, lightPos);
         model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+
         glUniform3fv(shaderList[1]->GetUniformLocation("lightColor"), 1, (GLfloat *)&lightColor);
-        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-        glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(shaderList[1]->GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(shaderList[1]->GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(shaderList[1]->GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
         meshList[1]->RenderMesh();
 
         glUseProgram(0);
