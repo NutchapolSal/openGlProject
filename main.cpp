@@ -29,12 +29,6 @@ float pitch = 0.0f;
 glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 glm::vec3 lightPos = glm::vec3(1.0f, 1.0f, 0.0f);
 
-static const char *vShader = "Shaders/shader.vert";
-static const char *fShader = "Shaders/shader.frag";
-
-static const char *lightVShader = "Shaders/lightShader.vert";
-static const char *lightFShader = "Shaders/lightShader.frag";
-
 void CreateOBJ() {
     Mesh *obj1 = new Mesh();
     obj1->CreateMeshFromOBJ("Models/suzanne.obj");
@@ -47,11 +41,11 @@ void CreateOBJ() {
 
 void CreateShaders() {
     Shader *shader1 = new Shader();
-    shader1->CreateFromFiles(vShader, fShader);
+    shader1->CreateFromFiles("Shaders/shader.vert", "Shaders/shader.frag");
     shaderList.push_back(shader1);
 
     Shader *shader2 = new Shader();
-    shader2->CreateFromFiles(lightVShader, lightFShader);
+    shader2->CreateFromFiles("Shaders/lightShader.vert", "Shaders/lightShader.frag");
     shaderList.push_back(shader2);
 }
 
