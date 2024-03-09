@@ -119,6 +119,7 @@ int main() {
     int width;
     int height;
     int nrChannels;
+    stbi_set_flip_vertically_on_load(true);
     unsigned char *data = stbi_load("Textures/uvmap.png", &width, &height, &nrChannels, 0);
 
     if (data) {
