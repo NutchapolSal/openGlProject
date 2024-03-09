@@ -145,16 +145,16 @@ int main() {
         }
 
         if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_I) == GLFW_PRESS) {
-            pitch += 0.075f;
+            pitch += 125.0f * deltaTime;
         }
         if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_K) == GLFW_PRESS) {
-            pitch -= 0.075f;
+            pitch -= 125.0f * deltaTime;
         }
         if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_J) == GLFW_PRESS) {
-            yaw -= 0.075f;
+            yaw -= 125.0f * deltaTime;
         }
         if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_L) == GLFW_PRESS) {
-            yaw += 0.075f;
+            yaw += 125.0f * deltaTime;
         }
 
         checkMouse();
