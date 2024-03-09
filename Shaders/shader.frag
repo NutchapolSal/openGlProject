@@ -33,10 +33,10 @@ vec3 specularLight() {
 
     vec3 lightDir = normalize(lightPos - FragPos);
     vec3 norm = normalize(Normal);
-    vec3 reflectDir = reflect(-lightDir, norm);
     vec3 viewDir = normalize(viewPos - FragPos);
 
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0f), shininess);
+    vec3 halfDir = (viewDir + lightDir) / 2.0f;
+    float spec = pow(max(dot(halfDir, norm), 0.0f), shininess);
 
     vec3 specular = specularStrength * spec * lightColor;
 
