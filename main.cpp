@@ -23,6 +23,7 @@ const GLint WIDTH = 800, HEIGHT = 600;
 Window mainWindow;
 std::vector<Mesh *> meshList;
 std::vector<Shader *> shaderList;
+Shader *depthShader;
 
 float yaw = -90.0f;
 float pitch = 0.0f;
@@ -57,6 +58,9 @@ void CreateShaders() {
     Shader *shader3 = new Shader();
     shader3->CreateFromFiles("Shaders/bgShader.vert", "Shaders/bgShader.frag");
     shaderList.push_back(shader3);
+
+    depthShader = new Shader();
+    depthShader->CreateFromFiles("Shaders/depthShader.vert", "Shaders/depthShader.frag");
 }
 
 void checkMouse() {
@@ -167,6 +171,27 @@ int main() {
     }
     stbi_image_free(data);
 
+    GLuint depthMapFBO;
+    glGenFramebuffers(1, &depthMapFBO);
+
+    const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+
+    GLuint depthMap;
+    glGenTextures(1, &depthMap);
+    glBindTexture(GL_TEXTURE_2D, depthMap);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT,
+                 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
     float deltaTime;
     float lastFrame;
     // Loop until window closed
@@ -232,13 +257,27 @@ int main() {
 
         glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraDirection, cameraUp);
 
-        // Clear window
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         lightPos.x = 1.0f + sin(glfwGetTime()) * 2.0f;
         lightPos.y = sin(glfwGetTime() / 2.0f);
         lightPos.z = 0.0f;
+
+        // shadow depth map pass
+        glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+        glClear(GL_DEPTH_BUFFER_BIT);
+        glm::mat4 lightProjection = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, 0.1f, 20.0f);
+        glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 0.0f, -2.5f), up);
+        depthShader->UseShader();
+        glCullFace(GL_FRONT);
+        RenderScene(lightView, lightProjection);
+        glCullFace(GL_BACK);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        // real render pass
+        // Clear window
+        glViewport(0, 0, mainWindow.getBufferWidth(), mainWindow.getBufferHeight());
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // draw here
         shaderList[0]->UseShader();
