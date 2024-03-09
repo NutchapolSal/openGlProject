@@ -299,6 +299,9 @@ int main() {
         glUniformMatrix4fv(shaderList[2]->GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(shaderList[2]->GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glUniform3fv(shaderList[2]->GetUniformLocation("bgColour"), 1, (GLfloat *)&bgColour);
+        glUniformMatrix4fv(shaderList[2]->GetUniformLocation("lightProjection"), 1, GL_FALSE, glm::value_ptr(lightProjection));
+        glUniformMatrix4fv(shaderList[2]->GetUniformLocation("lightView"), 1, GL_FALSE, glm::value_ptr(lightView));
+        glBindTexture(GL_TEXTURE_2D, depthMap);
         meshList[1]->RenderMesh();
 
         shaderList[1]->UseShader();
