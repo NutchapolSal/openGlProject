@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "Libs/GameObject.h"
+#include "Libs/GameObjectCreator.h"
 #include "Libs/Mesh.h"
 #include "Libs/Shader.h"
 #include "Libs/Window.h"
@@ -31,7 +32,8 @@ float pitch = 0.0f;
 glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 glm::vec3 lightPos = glm::vec3(4.0f, 4.0f, 1.0f);
 
-bool loadTexture(const char *filename, unsigned int *texture) {
+bool loadTexture(const char *filename, unsigned int *texture, GLenum textureUnit) {
+    glActiveTexture(textureUnit);
     glGenTextures(1, texture);
     glBindTexture(GL_TEXTURE_2D, *texture);
 
@@ -59,67 +61,136 @@ bool loadTexture(const char *filename, unsigned int *texture) {
 
 void CreateGameObjects() {
     unsigned int blankTexture;
+    glActiveTexture(GL_TEXTURE0);
     glGenTextures(1, &blankTexture);
     glBindTexture(GL_TEXTURE_2D, blankTexture);
-    unsigned char blankTextureData[] = {255, 255, 255, 255};
+    unsigned char blankTextureData[] = {31, 31, 31, 255};
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, blankTextureData);
 
-    Shader *mainShader = new Shader();
-    mainShader->CreateFromFiles("Shaders/shader.vert", "Shaders/shader.frag");
+    unsigned int blankSpecularMap;
+    glActiveTexture(GL_TEXTURE1);
+    glGenTextures(1, &blankSpecularMap);
+    glBindTexture(GL_TEXTURE_2D, blankSpecularMap);
+    unsigned char blankSpecularMapData[] = {255, 255, 255, 255};
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, blankSpecularMapData);
 
-    Mesh *suzanneMesh = new Mesh();
-    suzanneMesh->CreateMeshFromOBJ("Models/suzanne.obj");
-    GameObject *suzanne = new GameObject(suzanneMesh,
-                                         mainShader,
-                                         blankTexture,
-                                         glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 5.0f, 0.0f)));
-    gameObjects.push_back(suzanne);
+    GameObject::SetBlankTexture(blankTexture);
+    GameObject::SetBlankSpecularMap(blankSpecularMap);
 
-    Mesh *cubeMesh = new Mesh();
-    cubeMesh->CreateMeshFromOBJ("Models/cube.obj");
-    GameObject *cube = new GameObject(cubeMesh,
-                                      mainShader,
-                                      blankTexture,
-                                      glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f)));
-    gameObjects.push_back(cube);
+    // Shader *mainShader = new Shader();
+    // mainShader->CreateFromFiles("Shaders/shader.vert", "Shaders/shader.frag");
 
-    Mesh *axisTestMesh = new Mesh();
-    axisTestMesh->CreateMeshFromOBJ("Blends/axis test.obj");
-    unsigned int axisTestTexture;
-    loadTexture("Blends/axis test color.png", &axisTestTexture);
-    GameObject *axisTest = new GameObject(axisTestMesh,
-                                          mainShader,
-                                          axisTestTexture,
-                                          glm::mat4(1.0f));
-    gameObjects.push_back(axisTest);
+    // Mesh *suzanneMesh = new Mesh();
+    // suzanneMesh->CreateMeshFromOBJ("Models/suzanne.obj");
+    // GameObject *suzanne = new GameObject(suzanneMesh,
+    //                                      mainShader,
+    //                                      glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 3.0f, 0.0f)));
+    // gameObjects.push_back(suzanne);
 
-    Mesh *triangleTestMesh = new Mesh();
-    triangleTestMesh->CreateMeshFromOBJ("Blends/triangle test.obj");
-    unsigned int triangleTestTexture;
-    loadTexture("Blends/triangle test color.png", &triangleTestTexture);
-    GameObject *triangleTest = new GameObject(triangleTestMesh,
-                                              mainShader,
-                                              triangleTestTexture,
-                                              glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, 0.0f, 0.0f)));
-    gameObjects.push_back(triangleTest);
+    // Mesh *cubeMesh = new Mesh();
+    // cubeMesh->CreateMeshFromOBJ("Models/cube.obj");
+    // GameObject *cube = new GameObject(cubeMesh,
+    //                                   mainShader,
+    //                                   glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f)));
+    // gameObjects.push_back(cube);
 
-    Mesh *triangleSeamTestMesh = new Mesh();
-    triangleSeamTestMesh->CreateMeshFromOBJ("Blends/triangle seam test.obj");
-    unsigned int triangleSeamTestTexture;
-    loadTexture("Blends/triangle seam test color.png", &triangleSeamTestTexture);
-    GameObject *triangleSeamTest = new GameObject(triangleSeamTestMesh,
-                                                  mainShader,
-                                                  triangleSeamTestTexture,
-                                                  glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 0.0f, 0.0f)));
-    gameObjects.push_back(triangleSeamTest);
+    // Mesh *axisTestMesh = new Mesh();
+    // axisTestMesh->CreateMeshFromOBJ("Blends/axis test.obj");
+    // unsigned int axisTestTexture;
+    // loadTexture("Blends/axis test color.png", &axisTestTexture, GL_TEXTURE0);
+    // GameObject *axisTest = new GameObject(axisTestMesh,
+    //                                       mainShader,
+    //                                       glm::mat4(1.0f));
+    // axisTest->SetTexture(axisTestTexture);
+    // gameObjects.push_back(axisTest);
 
-    Shader *lightShader = new Shader();
-    lightShader->CreateFromFiles("Shaders/lightShader.vert", "Shaders/lightShader.frag");
-    glm::mat4 lightModel(1.0f);
-    lightModel = glm::translate(lightModel, lightPos);
+    // Mesh *triangleTestMesh = new Mesh();
+    // triangleTestMesh->CreateMeshFromOBJ("Blends/triangle test.obj");
+    // unsigned int triangleTestTexture;
+    // loadTexture("Blends/triangle test color.png", &triangleTestTexture, GL_TEXTURE0);
+    // GameObject *triangleTest = new GameObject(triangleTestMesh,
+    //                                           mainShader,
+    //                                           glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, 0.0f, 0.0f)));
+    // triangleTest->SetTexture(triangleTestTexture);
+    // gameObjects.push_back(triangleTest);
+
+    // Mesh *triangleSeamTestMesh = new Mesh();
+    // triangleSeamTestMesh->CreateMeshFromOBJ("Blends/triangle seam test.obj");
+    // unsigned int triangleSeamTestTexture;
+    // loadTexture("Blends/triangle seam test color.png", &triangleSeamTestTexture, GL_TEXTURE0);
+    // GameObject *triangleSeamTest = new GameObject(triangleSeamTestMesh,
+    //                                               mainShader,
+    //                                               glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 0.0f, 0.0f)));
+    // triangleSeamTest->SetTexture(triangleSeamTestTexture);
+    // gameObjects.push_back(triangleSeamTest);
+
+    // Mesh *coinMesh = new Mesh();
+    // coinMesh->CreateMeshFromOBJ("Blends/coin.obj");
+    // unsigned int coinTexture;
+    // loadTexture("Blends/coin color.png", &coinTexture, GL_TEXTURE0);
+    // GameObject *coin = new GameObject(coinMesh,
+    //                                   mainShader,
+    //                                   glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, -3.0f, 0.0f)));
+    // coin->SetTexture(coinTexture);
+    // gameObjects.push_back(coin);
+
+    // Shader *lightShader = new Shader();
+    // lightShader->CreateFromFiles("Shaders/lightShader.vert", "Shaders/lightShader.frag");
+    // glm::mat4 lightModel(1.0f);
+    // lightModel = glm::translate(lightModel, lightPos);
+    // lightModel = glm::scale(lightModel, glm::vec3(0.2f, 0.2f, 0.2f));
+    // GameObject *light = new GameObject(cubeMesh, lightShader, lightModel);
+    // gameObjects.push_back(light);
+
+    gameObjects.push_back(CreateGameObject(
+        "Models/suzanne",
+        "Shaders/shader.vert",
+        "Shaders/shader.frag",
+        glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 3.0f, 0.0f))));
+
+    gameObjects.push_back(
+        CreateGameObject(
+            "Models/cube",
+            "Shaders/shader.vert",
+            "Shaders/shader.frag",
+            glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f))));
+
+    gameObjects.push_back(
+        CreateGameObject(
+            "Blends/axis test",
+            "Shaders/shader.vert",
+            "Shaders/shader.frag",
+            glm::mat4(1.0f)));
+
+    gameObjects.push_back(
+        CreateGameObject(
+            "Blends/triangle test",
+            "Shaders/shader.vert",
+            "Shaders/shader.frag",
+            glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, 0.0f, 0.0f))));
+
+    gameObjects.push_back(
+        CreateGameObject(
+            "Blends/triangle seam test",
+            "Shaders/shader.vert",
+            "Shaders/shader.frag",
+            glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 0.0f, 0.0f))));
+
+    gameObjects.push_back(
+        CreateGameObject(
+            "Blends/coin",
+            "Shaders/shader.vert",
+            "Shaders/shader.frag",
+            glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, -3.0f, 0.0f))));
+
+    glm::mat4 lightModel = glm::translate(glm::mat4(1.0f), lightPos);
     lightModel = glm::scale(lightModel, glm::vec3(0.2f, 0.2f, 0.2f));
-    GameObject *light = new GameObject(cubeMesh, lightShader, blankTexture, lightModel);
-    gameObjects.push_back(light);
+    gameObjects.push_back(
+        CreateGameObject(
+            "Models/cube",
+            "Shaders/lightShader.vert",
+            "Shaders/lightShader.frag",
+            lightModel));
 }
 
 void checkMouse() {
@@ -243,8 +314,9 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         lightPos.x = 1.0f + sin(glfwGetTime()) * 2.0f;
-        lightPos.y = sin(glfwGetTime() / 2.0f);
-        lightPos.z = 0.0f;
+        lightPos.y = 5.0f;
+        lightPos.z = sin(glfwGetTime() / 2.0f);
+        gameObjects[gameObjects.size() - 1]->SetModelTransform(glm::scale(glm::translate(glm::mat4(1.0f), lightPos), glm::vec3(0.2f, 0.2f, 0.2f)));
 
         // draw here
         for (auto &gameObject : gameObjects) {
