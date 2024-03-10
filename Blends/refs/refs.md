@@ -5,6 +5,7 @@
 # https://www.spriters-resource.com/mobile/cookierunovenbreak/sheet/130906/
 ## bonustime jelly
 - imgtxt_bonustime0.png
+
 ## health gauge
 - icon_heartLife.png
 - gaugebg_heart01.png
