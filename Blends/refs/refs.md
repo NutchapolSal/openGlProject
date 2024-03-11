@@ -44,4 +44,12 @@
 ## pet choco drop
 - choco_drop.png
 
+# https://commons.wikimedia.org/wiki/File:IPhone_4_Mock_No_Shadow_PSD.png
+## phone
+- IPhone_4_Mock_No_Shadow_PSD.png
 
+# https://www.spriters-resource.com/mobile/cookierunovenbreak/sheet/129502/
+## phone
+- land0002_tm001_bg1.png
+- land0002_tm001_bg2.png
+- land0002_tm001_bg3.png
