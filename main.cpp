@@ -30,7 +30,7 @@ std::vector<GameObject *> gameObjects;
 float yaw = -90.0f;
 float pitch = 0.0f;
 glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
-glm::vec3 lightPos = glm::vec3(4.0f, 4.0f, 1.0f);
+glm::vec3 lightPos = glm::vec3(0.227398f, 3.88926f, 0.08181f);
 
 void CreateGameObjects() {
     unsigned int blankTexture;
@@ -48,46 +48,110 @@ void CreateGameObjects() {
     GameObject::SetBlankTexture(blankTexture);
     GameObject::SetBlankSpecularMap(blankSpecularMap);
 
-    gameObjects.push_back(CreateGameObject(
-        "Models/suzanne",
-        "Shaders/shader.vert",
-        "Shaders/shader.frag",
-        glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 3.0f, 0.0f))));
-
     gameObjects.push_back(
         CreateGameObject(
-            "Models/cube",
-            "Shaders/shader.vert",
-            "Shaders/shader.frag",
-            glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f))));
-
-    gameObjects.push_back(
-        CreateGameObject(
-            "Blends/axis test",
+            "Blends/bonustime",
             "Shaders/shader.vert",
             "Shaders/shader.frag",
             glm::mat4(1.0f)));
 
     gameObjects.push_back(
         CreateGameObject(
-            "Blends/triangle test",
+            "Blends/boy",
             "Shaders/shader.vert",
             "Shaders/shader.frag",
-            glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, 0.0f, 0.0f))));
+            glm::mat4(1.0f)));
 
     gameObjects.push_back(
         CreateGameObject(
-            "Blends/triangle seam test",
+            "Blends/coin gold",
             "Shaders/shader.vert",
             "Shaders/shader.frag",
-            glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 0.0f, 0.0f))));
+            glm::mat4(1.0f)));
 
     gameObjects.push_back(
         CreateGameObject(
             "Blends/coin",
             "Shaders/shader.vert",
             "Shaders/shader.frag",
-            glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, -3.0f, 0.0f))));
+            glm::mat4(1.0f)));
+
+    gameObjects.push_back(
+        CreateGameObject(
+            "Blends/floor",
+            "Shaders/shader.vert",
+            "Shaders/shader.frag",
+            glm::mat4(1.0f)));
+
+    gameObjects.push_back(
+        CreateGameObject(
+            "Blends/gingerbrave",
+            "Shaders/shader.vert",
+            "Shaders/shader.frag",
+            glm::mat4(1.0f)));
+
+    gameObjects.push_back(
+        CreateGameObject(
+            "Blends/healthbar",
+            "Shaders/shader.vert",
+            "Shaders/shader.frag",
+            glm::mat4(1.0f)));
+
+    gameObjects.push_back(
+        CreateGameObject(
+            "Blends/jelly bear blue",
+            "Shaders/shader.vert",
+            "Shaders/shader.frag",
+            glm::mat4(1.0f)));
+
+    gameObjects.push_back(
+        CreateGameObject(
+            "Blends/jelly bear pink",
+            "Shaders/shader.vert",
+            "Shaders/shader.frag",
+            glm::mat4(1.0f)));
+
+    gameObjects.push_back(
+        CreateGameObject(
+            "Blends/jelly bear yellow",
+            "Shaders/shader.vert",
+            "Shaders/shader.frag",
+            glm::mat4(1.0f)));
+
+    gameObjects.push_back(
+        CreateGameObject(
+            "Blends/jelly",
+            "Shaders/shader.vert",
+            "Shaders/shader.frag",
+            glm::mat4(1.0f)));
+
+    gameObjects.push_back(
+        CreateGameObject(
+            "Blends/jellybean red",
+            "Shaders/shader.vert",
+            "Shaders/shader.frag",
+            glm::mat4(1.0f)));
+
+    gameObjects.push_back(
+        CreateGameObject(
+            "Blends/jellybean",
+            "Shaders/shader.vert",
+            "Shaders/shader.frag",
+            glm::mat4(1.0f)));
+
+    gameObjects.push_back(
+        CreateGameObject(
+            "Blends/phone",
+            "Shaders/shader.vert",
+            "Shaders/shader.frag",
+            glm::mat4(1.0f)));
+
+    gameObjects.push_back(
+        CreateGameObject(
+            "Blends/wood table",
+            "Shaders/shader.vert",
+            "Shaders/shader.frag",
+            glm::mat4(1.0f)));
 
     glm::mat4 lightModel = glm::translate(glm::mat4(1.0f), lightPos);
     lightModel = glm::scale(lightModel, glm::vec3(0.2f, 0.2f, 0.2f));
@@ -136,7 +200,7 @@ int main() {
 
     // for secret room 3 enter - https://forms.gle/U9VE4pkYAPNvUW1H9
 
-    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 10.0f);
+    glm::vec3 cameraPos = glm::vec3(0.023159f, 1.46059f, -0.87315f);
     glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, -1.0f);
     glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -218,22 +282,17 @@ int main() {
         glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraDirection, cameraUp);
 
         // Clear window
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClearColor(0.125f, 0.125f, 0.125f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        lightPos.x = 1.0f + sin(glfwGetTime()) * 2.0f;
-        lightPos.y = 5.0f;
-        lightPos.z = sin(glfwGetTime() / 2.0f);
-        gameObjects[gameObjects.size() - 1]->SetModelTransform(glm::scale(glm::translate(glm::mat4(1.0f), lightPos), glm::vec3(0.2f, 0.2f, 0.2f)));
 
         // draw here
         for (auto &gameObject : gameObjects) {
             gameObject->UseShader();
-            glUniform3fv(gameObjects[0]->GetShaderUniformLocation("lightColor"), 1, (GLfloat *)&lightColor);
-            glUniform3fv(gameObjects[0]->GetShaderUniformLocation("lightPos"), 1, (GLfloat *)&lightPos);
-            glUniform3fv(gameObjects[0]->GetShaderUniformLocation("viewPos"), 1, (GLfloat *)&cameraPos);
-            glUniformMatrix4fv(gameObjects[0]->GetShaderUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
-            glUniformMatrix4fv(gameObjects[0]->GetShaderUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
+            glUniform3fv(gameObject->GetShaderUniformLocation("lightColor"), 1, (GLfloat *)&lightColor);
+            glUniform3fv(gameObject->GetShaderUniformLocation("lightPos"), 1, (GLfloat *)&lightPos);
+            glUniform3fv(gameObject->GetShaderUniformLocation("viewPos"), 1, (GLfloat *)&cameraPos);
+            glUniformMatrix4fv(gameObject->GetShaderUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
+            glUniformMatrix4fv(gameObject->GetShaderUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
             gameObject->Render();
         }
 
