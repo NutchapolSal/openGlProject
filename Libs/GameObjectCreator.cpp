@@ -7,8 +7,7 @@ std::unordered_map<std::string, unsigned int> specularMapMap;
 std::unordered_map<std::string, bool> noDiffuseMap;
 std::unordered_map<std::string, bool> noSpecularMap;
 
-static void loadTexturePrivate(const char *texturePath, unsigned int *texture, GLenum textureUnit) {
-    glActiveTexture(textureUnit);
+static void loadTexturePrivate(std::string texturePath, unsigned int *texture) {
     glGenTextures(1, texture);
     glBindTexture(GL_TEXTURE_2D, *texture);
 
@@ -21,7 +20,7 @@ static void loadTexturePrivate(const char *texturePath, unsigned int *texture, G
     int height;
     int nrChannels;
     stbi_set_flip_vertically_on_load(true);
-    unsigned char *data = stbi_load(texturePath, &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load(texturePath.c_str(), &width, &height, &nrChannels, 0);
 
     if (!data) {
         throw std::runtime_error("Failed to load texture");
@@ -31,14 +30,14 @@ static void loadTexturePrivate(const char *texturePath, unsigned int *texture, G
     stbi_image_free(data);
 }
 
-static void LoadDiffuseMap(GameObject *gameObject, char *texturePath) {
+static void LoadDiffuseMap(GameObject *gameObject, std::string texturePath) {
     if (textureMap.count(texturePath)) {
         gameObject->SetTexture(textureMap[texturePath]);
     } else if (noDiffuseMap.count(texturePath)) {
     } else {
         try {
             unsigned int texture;
-            loadTexturePrivate(texturePath, &texture, GL_TEXTURE0);
+            loadTexturePrivate(texturePath, &texture);
             gameObject->SetTexture(texture);
             textureMap[texturePath] = texture;
         } catch (std::runtime_error &e) {
@@ -48,14 +47,14 @@ static void LoadDiffuseMap(GameObject *gameObject, char *texturePath) {
     }
 }
 
-static void LoadSpecularMap(GameObject *gameObject, char *specularMapPath) {
+static void LoadSpecularMap(GameObject *gameObject, std::string specularMapPath) {
     if (specularMapMap.count(specularMapPath)) {
         gameObject->SetSpecularMap(specularMapMap[specularMapPath]);
     } else if (noSpecularMap.count(specularMapPath)) {
     } else {
         try {
             unsigned int specularMap;
-            loadTexturePrivate(specularMapPath, &specularMap, GL_TEXTURE1);
+            loadTexturePrivate(specularMapPath, &specularMap);
             gameObject->SetSpecularMap(specularMap);
             specularMapMap[specularMapPath] = specularMap;
         } catch (std::runtime_error &e) {
@@ -65,20 +64,17 @@ static void LoadSpecularMap(GameObject *gameObject, char *specularMapPath) {
     }
 }
 
-GameObject *CreateGameObject(const char *objName, const char *vShaderPath, const char *fShaderPath, glm::mat4 modelTransform) {
-    char *objFilename = strdup(objName);
-    strcat(objFilename, ".obj");
-    char *diffuseMapFilename = strdup(objName);
-    strcat(diffuseMapFilename, " diffuse.png");
-    char *specularMapFilename = strdup(objName);
-    strcat(specularMapFilename, " specular.png");
+GameObject *CreateGameObject(std::string objName, std::string vShaderPath, std::string fShaderPath, glm::mat4 modelTransform) {
+    std::string objFilename = objName + ".obj";
+    std::string diffuseMapFilename = objName + " diffuse.png";
+    std::string specularMapFilename = objName + " specular.png";
 
     Mesh *mesh;
     if (meshMap.count(objName)) {
         mesh = meshMap[objName];
     } else {
         mesh = new Mesh();
-        mesh->CreateMeshFromOBJ(objFilename);
+        mesh->CreateMeshFromOBJ(objFilename.c_str());
         meshMap[objName] = mesh;
     }
 
@@ -87,7 +83,7 @@ GameObject *CreateGameObject(const char *objName, const char *vShaderPath, const
         shader = shaderMap[vShaderPath];
     } else {
         shader = new Shader();
-        shader->CreateFromFiles(vShaderPath, fShaderPath);
+        shader->CreateFromFiles(vShaderPath.c_str(), fShaderPath.c_str());
         shaderMap[vShaderPath] = shader;
     }
 

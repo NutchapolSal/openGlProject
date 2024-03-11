@@ -11,6 +11,6 @@
 #include "Shader.h"
 #include "stb_image.h"
 
-GameObject *CreateGameObject(const char *objName, const char *vShaderPath, const char *fShaderPath, glm::mat4 modelTransform);
+GameObject *CreateGameObject(std::string objName, std::string vShaderPath, std::string fShaderPath, glm::mat4 modelTransform);
 
 #endif
