@@ -44,4 +44,8 @@
 ## pet choco drop
 - choco_drop.png
 
+# https://www.mixamo.com/#/?page=1&type=Character
+## boy
+- Aj.fbx
+
 
