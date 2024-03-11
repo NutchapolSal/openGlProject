@@ -57,3 +57,10 @@
 - land0002_tm001_bg1.png
 - land0002_tm001_bg2.png
 - land0002_tm001_bg3.png
+
+# https://www.spriters-resource.com/mobile/cookierunovenbreak/sheet/108710/
+## jellybean
+- jellybean_01.png
+
+## jellybean red
+- jellybean_03.png
