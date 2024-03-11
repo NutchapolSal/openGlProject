@@ -130,6 +130,8 @@ int main() {
     mainWindow = Window(WIDTH, HEIGHT, 3, 3);
     mainWindow.initialise();
 
+    glfwSetInputMode(mainWindow.getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
     CreateGameObjects();
 
     // for secret room 3 enter - https://forms.gle/U9VE4pkYAPNvUW1H9
