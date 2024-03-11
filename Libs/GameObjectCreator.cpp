@@ -69,10 +69,12 @@ GameObject *CreateGameObject(std::string objName, std::string vShaderPath, std::
     std::string diffuseMapFilename = objName + " diffuse.png";
     std::string specularMapFilename = objName + " specular.png";
 
+    std::cout << "Loading " << objName << std::endl;
     Mesh *mesh;
     if (meshMap.count(objName)) {
         mesh = meshMap[objName];
     } else {
+        std::cout << "Loading mesh " << objFilename << std::endl;
         mesh = new Mesh();
         mesh->CreateMeshFromOBJ(objFilename.c_str());
         meshMap[objName] = mesh;
@@ -82,6 +84,7 @@ GameObject *CreateGameObject(std::string objName, std::string vShaderPath, std::
     if (shaderMap.count(vShaderPath)) {
         shader = shaderMap[vShaderPath];
     } else {
+        std::cout << "Loading shader " << vShaderPath << " & " << fShaderPath << std::endl;
         shader = new Shader();
         shader->CreateFromFiles(vShaderPath.c_str(), fShaderPath.c_str());
         shaderMap[vShaderPath] = shader;
