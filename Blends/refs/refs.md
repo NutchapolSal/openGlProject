@@ -28,3 +28,4 @@
 # https://www.spriters-resource.com/mobile/cookierunovenbreak/sheet/128968/
 ## gingerbrave
 - cookie0001z05_shop.png
+- cookie0001z05x2_0008.png
