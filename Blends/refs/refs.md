@@ -29,3 +29,19 @@
 ## gingerbrave
 - cookie0001z05_shop.png
 - cookie0001z05x2_0008.png
+
+# https://www.spriters-resource.com/mobile/cookierun/sheet/107938/
+## jelly
+- Jellies.png
+## jelly bear yellow
+- Jellies_bear1.png
+## jelly bear pink
+- Jellies_bear2.png
+## jelly bear blue
+- Jellies_bear3.png
+## coin gold
+- jelly_gold_coin.png
+## pet choco drop
+- choco_drop.png
+
+
