@@ -1,0 +1,43 @@
+# Blender 4.0.2 MTL File: 'scene.blend'
+# www.blender.org
+
+newmtl Boy01_Body_MAT1
+Ns 200.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:/Boy01_diffuse.jpg
+map_Ks C:/Boy01_spec.jpg
+map_Bump -bm 1.000000 C:/Boy01_normal.jpg
+
+newmtl Boy01_Brows_MAT2
+Ns 200.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 3
+map_Kd C:/Boy01_FacialAnimMap.png
+map_d C:/Boy01_FacialAnimMap.png
+
+newmtl Boy01_Eyes_MAT2
+Ns 200.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 3
+map_Kd C:/Boy01_FacialAnimMap.png
+map_d C:/Boy01_FacialAnimMap.png
+
+newmtl Boy01_Mouth_MAT2
+Ns 200.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 3
+map_Kd C:/Boy01_FacialAnimMap.png
+map_d C:/Boy01_FacialAnimMap.png
