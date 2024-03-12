@@ -31,6 +31,9 @@ float yaw = -90.0f;
 float pitch = 0.0f;
 glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 glm::vec3 lightPos = glm::vec3(0.227398f, 3.88926f, 0.08181f);
+float controlSpeed = 1.0f;
+
+bool mouseActive = true;
 
 void CreateGameObjects() {
     unsigned int blankTexture;
@@ -176,11 +179,11 @@ void checkMouse() {
     lastX = xpos;
     lastY = ypos;
 
-    if (!glfwGetWindowAttrib(mainWindow.getWindow(), GLFW_FOCUSED)) {
+    if (!mouseActive) {
         return;
     }
 
-    float sensitivity = 0.1f;
+    float sensitivity = 0.1f * controlSpeed;
     xoffset *= sensitivity;
     yoffset *= sensitivity;
 
@@ -190,17 +193,60 @@ void checkMouse() {
     pitch = glm::clamp(pitch, -89.0f, 89.0f);
 }
 
+void setMouseInactive() {
+    glfwSetInputMode(mainWindow.getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    mouseActive = false;
+}
+
+void setMouseActive() {
+    glfwSetInputMode(mainWindow.getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    mouseActive = true;
+}
+
+void windowFocusCallback(GLFWwindow *window, int focused) {
+    if (focused) {
+        setMouseActive();
+    } else {
+        setMouseInactive();
+    }
+}
+
+void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        if (mouseActive) {
+            setMouseInactive();
+        } else {
+            glfwSetWindowShouldClose(mainWindow.getWindow(), GL_TRUE);
+        }
+    } else if (key == GLFW_KEY_LEFT_CONTROL || key == GLFW_KEY_RIGHT_CONTROL) {
+        if (action == GLFW_PRESS) {
+            controlSpeed = 0.1f;
+        } else if (action == GLFW_RELEASE) {
+            controlSpeed = 1.0f;
+        }
+    }
+}
+
+void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods) {
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+        setMouseActive();
+    }
+}
+
 int main() {
     mainWindow = Window(WIDTH, HEIGHT, 3, 3);
     mainWindow.initialise();
 
     glfwSetInputMode(mainWindow.getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetWindowFocusCallback(mainWindow.getWindow(), windowFocusCallback);
+    glfwSetKeyCallback(mainWindow.getWindow(), keyCallback);
+    glfwSetMouseButtonCallback(mainWindow.getWindow(), mouseButtonCallback);
 
     CreateGameObjects();
 
     // for secret room 3 enter - https://forms.gle/U9VE4pkYAPNvUW1H9
 
-    glm::vec3 cameraPos = glm::vec3(0.023159f, 1.46059f, -0.87315f);
+    glm::vec3 cameraPos = glm::vec3(0.023159f, 1.46059f, 0.87315f);
     glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, -1.0f);
     glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -226,21 +272,17 @@ int main() {
         // Get + Handle user input events
         glfwPollEvents();
 
-        if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-            glfwSetWindowShouldClose(mainWindow.getWindow(), GL_TRUE);
-        }
-
         if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_I) == GLFW_PRESS) {
-            pitch += 125.0f * deltaTime;
+            pitch += 125.0f * deltaTime * controlSpeed;
         }
         if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_K) == GLFW_PRESS) {
-            pitch -= 125.0f * deltaTime;
+            pitch -= 125.0f * deltaTime * controlSpeed;
         }
         if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_J) == GLFW_PRESS) {
-            yaw -= 125.0f * deltaTime;
+            yaw -= 125.0f * deltaTime * controlSpeed;
         }
         if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_L) == GLFW_PRESS) {
-            yaw += 125.0f * deltaTime;
+            yaw += 125.0f * deltaTime * controlSpeed;
         }
 
         checkMouse();
@@ -256,22 +298,22 @@ int main() {
         cameraUp = glm::normalize(glm::cross(cameraRight, cameraDirection));
 
         if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
-            cameraPos += cameraForwardFlat * deltaTime * 5.0f;
+            cameraPos += cameraForwardFlat * deltaTime * 5.0f * controlSpeed;
         }
         if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
-            cameraPos -= cameraForwardFlat * deltaTime * 5.0f;
+            cameraPos -= cameraForwardFlat * deltaTime * 5.0f * controlSpeed;
         }
         if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
-            cameraPos -= cameraRight * deltaTime * 5.0f;
+            cameraPos -= cameraRight * deltaTime * 5.0f * controlSpeed;
         }
         if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
-            cameraPos += cameraRight * deltaTime * 5.0f;
+            cameraPos += cameraRight * deltaTime * 5.0f * controlSpeed;
         }
         if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_SPACE) == GLFW_PRESS) {
-            cameraPos += up * deltaTime * 5.0f;
+            cameraPos += up * deltaTime * 5.0f * controlSpeed;
         }
         if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-            cameraPos -= up * deltaTime * 5.0f;
+            cameraPos -= up * deltaTime * 5.0f * controlSpeed;
         }
         if (glfwGetKey(mainWindow.getWindow(), GLFW_KEY_R) == GLFW_PRESS) {
             cameraPos = glm::vec3(0.0f, 0.0f, 10.0f);
